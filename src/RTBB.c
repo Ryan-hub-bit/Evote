@@ -195,7 +195,7 @@ int main(int argc, char **argv) {
       deleteElection(db, election);
       return 0;
    } else if (!strncmp("vote", argv[1], MAX_NAME_LEN)) {
-      if (argc < 6) {
+      if (argc < 7) {
          printf("%s", USAGE);
          return ERROR;
       }
@@ -219,10 +219,12 @@ int main(int argc, char **argv) {
          printf("%s", USAGE);
          return ERROR;
       }
+      char reason[MAX_NAME_LEN];
+      strncpy(reason, argv[6], MAX_NAME_LEN-1);
       if (!isEligible(election_id, office_id, voter_id)) {
          return ERROR;
       }
-      storeVote(db, voter_id, candidate_id, office_id);
+      storeVote(db, voter_id, candidate_id, office_id, reason);
       return 0;
    } else if (!strncmp("get-elections", argv[1], MAX_NAME_LEN)) {
       getElections(db);

@@ -29,11 +29,11 @@ try:
     elections = json.loads(json_elections)
     if len(form) != 0:
         ids = form.getvalue('election').split('_')
-        print(ids)
         unique_office_id = str(elections[ids[0]]['offices'][int(ids[1])]['id'])
         unqiue_candidate_id = str(elections[ids[0]]['offices'][int(ids[1])]['candidates'][int(ids[2])]['id'])
+        crt = str(form.getvalue('reason'));
         subprocess.check_output(
-            [PATH_TO_MACHINE, 'vote', form.getvalue('voterId'), str(convert_date_to_id(ids[0])), unique_office_id, unqiue_candidate_id])
+            [PATH_TO_MACHINE, 'vote', form.getvalue('voterId'), str(convert_date_to_id(ids[0])), unqiue_candidate_id,unique_office_id, crt])
         print('<b>Sucessfully cast ballot.</b>')
         print('<ul>')
         print('<li>Election Date: {}</li>'.format(ids[0]))
@@ -60,6 +60,8 @@ try:
                             '<option value="{}_{}_{}">{}</option>'.format(date, oid, cid, candidate['name']))
                     print('</optgroup>')
         print('</select>')
+        print('<br><label for="reason">What you value the most from candidate? <br> (Military Service -> M, Belief in god -> B, Experience -> E) </label><br>')
+        print('<input type="text" id="reason" name="reason">')
         print('<input type="submit" value="Vote">')
         print('</form>')
 except subprocess.CalledProcessError as e:

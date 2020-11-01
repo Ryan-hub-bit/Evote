@@ -159,21 +159,18 @@ void getElection(sqlite3 *db, _id_t election_id, Election* dest) {
    sqlite3_finalize(stmt);
 }
 // code with sql injection vulnerbility
-void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office) {
+void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *ch) {
 
    char *err_msg = 0;
    char sqlStr[256];
-   // const char *sql = ("INSERT INTO vote VALUES(%d,%d,%d)",voter,candidate,office);
-   sprintf(sqlStr,"INSERT INTO Vote(voter,candidate,office) VALUES(%d, %d, %d)",voter,candidate,office);
+   //sprintf(sqlStr,"INSERT INTO Vote(voter,candidate,office,reason) VALUES(%d, %d, %d, '%s')",voter,candidate,office,ch);
+   sprintf(sqlStr,"INSERT INTO Vote(reason,voter,candidate,office) VALUES('%s',%d, %d, %d)",ch,voter,candidate,office);
    int rc = sqlite3_exec(db, sqlStr, 0, 0, &err_msg);
    if(rc != SQLITE_OK) {
        fprintf(stderr, "SQL error: %s\n", err_msg);
         sqlite3_free(err_msg);
    }
 }
-
-
-
 
 
 int getVote(sqlite3 *db, _id_t voter_id, _id_t office_id) {
