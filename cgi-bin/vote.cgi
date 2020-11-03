@@ -60,7 +60,7 @@ try:
                             '<option value="{}_{}_{}">{}</option>'.format(date, oid, cid, candidate['name']))
                     print('</optgroup>')
         print('</select>')
-        print('<br><label for="reason">What you value the most from candidate? <br> (Military Service -> M, Belief in god -> B, Experience -> E) </label><br>')
+        print('<br><label for="reason">What you value the most from candidate? <br> Empployment Rate -> R <br> Social Justice -> S <br> Opinion towards Opponent -> O <br> Tax Policy -> T </label><br>')
         print('<input type="text" id="reason" name="reason">')
         print('<input type="submit" value="Vote">')
         print('</form>')
