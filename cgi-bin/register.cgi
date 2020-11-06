@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash_shellshock
 PATH_TO_MACHINE=./etovucca
 
 render_register() {
