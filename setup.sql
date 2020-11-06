@@ -11,7 +11,7 @@ CREATE TABLE Registration (
   dob_day INTEGER NOT NULL,
   dob_mon INTEGER NOT NULL,
   dob_year INTEGER NOT NULL,
-  UNIQUE(name,county,zip,dob_day,dob_mon,dob_year)
+  UNIQUE(id,name,county,zip,dob_day,dob_mon,dob_year)
 );
 
 DROP TABLE IF EXISTS Election;
@@ -52,7 +52,8 @@ DROP TABLE IF EXISTS Vote;
 CREATE TABLE Vote (
   voter INTEGER REFERENCES Registration (id),
   candidate INTEGER REFERENCES Candidate (id),
-  office INTEGER REFERENCES Office (id),reason VARCHAR(128) NOT NULL,
+  office INTEGER REFERENCES Office (id),
+  reason VARCHAR(128) NOT NULL,
   UNIQUE(voter,office)
 );
 
