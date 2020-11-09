@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #define MAX_NAME_LEN 128 /* arbitrary, but may be passed on stack */
+#define MAX_DESC_LEN 500 /* arbitrary, but may be passed on stack */
 typedef int _id_t;
 
 typedef struct {
@@ -25,6 +26,7 @@ typedef struct {
 typedef struct {
    _id_t id; /* short identifier */
    char name[MAX_NAME_LEN];
+   char info[MAX_DESC_LEN];
    int num_votes;
    _id_t office_id;
 } Candidate;

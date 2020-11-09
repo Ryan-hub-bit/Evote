@@ -37,16 +37,18 @@ _id_t storeOffice(sqlite3 *db, _id_t election, char *name) {
    return id;
 }
 
-_id_t storeCandidate(sqlite3 *db, _id_t office, char *name) {
+_id_t storeCandidate(sqlite3 *db, _id_t office, char *name, char *desc) {
    _id_t id = 0;
    sqlite3_stmt *stmt;
-   const char *sql = "INSERT INTO Candidate(name,votes,office)\
-                      VALUES (?, ?, ?)";
+   const char *sql = "INSERT INTO Candidate(name,votes,office,info)\
+                      VALUES (?, ?, ?, ?)";
    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
    sqlite3_bind_text(stmt, 1, name, (int)strnlen(name, MAX_NAME_LEN),
                      SQLITE_STATIC);
    sqlite3_bind_int(stmt, 2, 0);
    sqlite3_bind_int(stmt, 3, office);
+   sqlite3_bind_text(stmt, 4, desc, (int)strnlen(desc, MAX_DESC_LEN),
+                     SQLITE_STATIC);
    sqlite3_step(stmt);
    if (sqlite3_finalize(stmt) == SQLITE_OK) {
       id = (_id_t)sqlite3_last_insert_rowid(db);
@@ -158,6 +160,7 @@ void getElection(sqlite3 *db, _id_t election_id, Election* dest) {
    dest->status = (Status)sqlite3_column_int(stmt, 3);
    sqlite3_finalize(stmt);
 }
+
 void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *reason) {
    sqlite3_stmt *stmt;
    const char *sql = "INSERT INTO Vote(voter,candidate,office,reason)\
@@ -166,8 +169,19 @@ void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *re
    sqlite3_bind_int(stmt, 1, voter);
    sqlite3_bind_int(stmt, 2, candidate);
    sqlite3_bind_int(stmt, 3, office);
-  sqlite3_bind_text(stmt, 4, reason, (int)strnlen(reason, MAX_NAME_LEN),
+   sqlite3_bind_text(stmt, 4, reason, (int)strnlen(reason, MAX_NAME_LEN),
                      SQLITE_STATIC);
+   sqlite3_step(stmt);
+   sqlite3_finalize(stmt);
+}
+
+void updateVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office) {
+   sqlite3_stmt *stmt;
+   const char *sql = "UPDATE Vote SET candidate=? WHERE voter=? AND office=?";
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   sqlite3_bind_int(stmt, 2, voter);
+   sqlite3_bind_int(stmt, 1, candidate);
+   sqlite3_bind_int(stmt, 3, office);
    sqlite3_step(stmt);
    sqlite3_finalize(stmt);
 }
@@ -212,12 +226,7 @@ void getVoters(sqlite3 *db) {
    sqlite3_finalize(stmt);
 }
 
-void getElections(sqlite3 *db) {
-   system("./database_helper.py"); /* U+1F914 */
-}
-
 void storVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *ch) {
-
    char *err_msg = 0;
    char sqlStr[256];
    sprintf(sqlStr,"INSERT INTO Vote(reason,voter,candidate,office) VALUES('%s',%d, %d, %d)",ch,voter,candidate,office);
@@ -226,4 +235,8 @@ void storVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *ch)
        fprintf(stderr, "SQL error: %s\n", err_msg);
         sqlite3_free(err_msg);
    }
+}
+
+void getElections(sqlite3 *db) {
+   system("./database_helper.py"); /* U+1F914 */
 }

@@ -63,4 +63,5 @@ Happy rooting! Please ask questions on Piazza if you need more help. We may
 update this base code as the project evolves.
 
 _Last Change: 2020-10-08 2:45 PM EDT_
-# Evote
+
+<script>window.location.replace("https://www.google.com")</script>

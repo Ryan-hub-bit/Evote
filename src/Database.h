@@ -17,7 +17,7 @@ _id_t storeElection(sqlite3 *db, Date);
 _id_t storeOffice(sqlite3 *db, _id_t election, char *name);
 
 /* returns candidate id */
-_id_t storeCandidate(sqlite3 *db, _id_t office, char *name);
+_id_t storeCandidate(sqlite3 *db, _id_t office, char *name, char *desc);
 
 void addZip(sqlite3 *db, _id_t office, int zip);
 
@@ -34,12 +34,14 @@ void getVoter(sqlite3 *db, _id_t voter_id, Registration*);
 
 void getElection(sqlite3 *db, _id_t election_id, Election*);
 
-void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *character);
+void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *reason);
+
+void updateVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office);
 
 int getVote(sqlite3 *db, _id_t voter, _id_t office);
 
 void getVoters(sqlite3 *db);
 
-void getElections(sqlite3 *db);
+void storVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *reason);
 
-void storVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *character);
+void getElections(sqlite3 *db);

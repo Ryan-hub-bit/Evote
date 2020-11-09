@@ -80,7 +80,6 @@ try:
     print('<a href="login.cgi?logout=true">Logout</a><br>')
     
     if len(form) != 0:
-        # print('<b>{}</b><br>'.format(form))
         if 'action' in form:
             if form.getvalue('action') == 'open':
                 subprocess.check_output([PATH_TO_MACHINE, 'open-election', form.getvalue('id')])
@@ -99,7 +98,7 @@ try:
             subprocess.check_output([PATH_TO_MACHINE, 'add-office', str(election_id), form.getvalue('addOffice')])
             print('<b>Successfully added {} to election {}</b>'.format(form.getvalue('addOffice'), form.getvalue('election')))
         elif 'addCandidate' in form:
-            subprocess.check_output([PATH_TO_MACHINE, 'add-candidate', form.getvalue('office'), form.getvalue('addCandidate')])
+            subprocess.check_output([PATH_TO_MACHINE, 'add-candidate', form.getvalue('office'), form.getvalue('addCandidate'), form.getvalue('addDescription')])
             print('<b>Successfully added candidate {} to office {}</b>'.format(form.getvalue('addCandidate'), form.getvalue('office')))
         elif 'addZip' in form:
             subprocess.check_output([PATH_TO_MACHINE, 'add-zip', form.getvalue('office'), form.getvalue('addZip')])
@@ -167,6 +166,8 @@ try:
     print('</select><br>')
     print('<label for="addCandidate">New Candidate Name:</label>')
     print('<input type="text" id="addCandidate" name="addCandidate"><br>')
+    print('<label for="addDescription">New Candidate Info:</label>')
+    print('<input type="text" id="addDescription" name="addDescription"><br>')
     print('<input type="submit" value="Add Candidate">')
     print('</form>') 
 

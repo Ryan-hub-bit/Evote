@@ -12,7 +12,7 @@ static sqlite3 *db;
 const char * USAGE = "Usage:\n\
    add-election <deadline date> -> <election id>\n\
    add-office <election id> <name> -> <office id>\n\
-   add-candidate <office id> <name> -> <candidate id>\n\
+   add-candidate <office id> <name> <description>-> <candidate id>\n\
    add-zip <office id> <zip code>\n\
    add-voter <name> <county name> <zip code> <date of birth> -> <voter id>\n\
    open-election <election id>\n\
@@ -96,18 +96,20 @@ int main(int argc, char **argv) {
       printf("%d\n", storeOffice(db, election, name));
       return 0;
    } else if (!strncmp("add-candidate", argv[1], MAX_NAME_LEN)) {
-      if (argc < 4) {
+      if (argc < 5) {
          printf("%s", USAGE);
          return ERROR;
       }
       _id_t office;
       char name[MAX_NAME_LEN];
+      char desc[MAX_DESC_LEN];
       if (sscanf(argv[2], "%d", &office) != 1) {
          printf("%s", USAGE);
          return ERROR;
       }
       strncpy(name, argv[3], MAX_NAME_LEN-1);
-      printf("%d\n", storeCandidate(db, office, name));
+      strncpy(desc, argv[4], MAX_DESC_LEN-1);
+      printf("%d\n", storeCandidate(db, office, name, desc));
    } else if (!strncmp("add-zip", argv[1], MAX_NAME_LEN)) {
       if (argc < 4) {
          printf("%s", USAGE);
@@ -219,12 +221,12 @@ int main(int argc, char **argv) {
          printf("%s", USAGE);
          return ERROR;
       }
-      char reason[MAX_NAME_LEN];
-      strncpy(reason, argv[6], MAX_NAME_LEN-1);
-      
       if (!isEligible(election_id, office_id, voter_id)) {
          return ERROR;
       }
+      char reason[MAX_NAME_LEN];
+      strncpy(reason, argv[6], MAX_NAME_LEN-1);
+
       storVote(db, voter_id, candidate_id, office_id, reason);
       return 0;
    } else if (!strncmp("get-elections", argv[1], MAX_NAME_LEN)) {
@@ -232,6 +234,33 @@ int main(int argc, char **argv) {
       return 0;
    } else if (!strncmp("get-voters", argv[1], MAX_NAME_LEN)) {
       getVoters(db);
+      return 0;
+   } else if (!strncmp("revote", argv[1], MAX_NAME_LEN)) {
+      if (argc < 6) {
+         printf("%s", USAGE);
+         return ERROR;
+      }
+      _id_t voter_id;
+      if (sscanf(argv[2], "%d", &voter_id) != 1) {
+         printf("%s", USAGE);
+         return ERROR;
+      }
+      _id_t election_id;
+      if (sscanf(argv[3], "%d", &election_id) != 1) {
+         printf("%s", USAGE);
+         return ERROR;
+      }
+      _id_t office_id;
+      if (sscanf(argv[4], "%d", &office_id) != 1) {
+         printf("%s", USAGE);
+         return ERROR;
+      }
+      _id_t candidate_id;
+      if (sscanf(argv[5], "%d", &candidate_id) != 1) {
+         printf("%s", USAGE);
+         return ERROR;
+      }
+      updateVote(db, voter_id, candidate_id, office_id);
       return 0;
    } else {
       printf("%s", USAGE);

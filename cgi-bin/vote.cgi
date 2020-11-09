@@ -27,14 +27,22 @@ try:
     json_elections = subprocess.check_output(
         [PATH_TO_MACHINE, "get-elections"]).decode('utf-8')
     elections = json.loads(json_elections)
+    for date in elections:
+        if elections[date]['status'] == "open":
+            for oid in range(0, len(elections[date]['offices'])):
+                office = elections[date]['offices'][oid]
+                for cid in range(0, len(office['candidates'])):
+                    candidate = office['candidates'][cid]
+                    print('<li>{} - {}</li>'.format(candidate['name'], candidate['info']))
     if len(form) != 0:
         ids = form.getvalue('election').split('_')
         unique_office_id = str(elections[ids[0]]['offices'][int(ids[1])]['id'])
         unqiue_candidate_id = str(elections[ids[0]]['offices'][int(ids[1])]['candidates'][int(ids[2])]['id'])
-        crt = str(form.getvalue('reason'));
+        crt = str(form.getvalue('reason'))
         subprocess.check_output(
-            [PATH_TO_MACHINE, 'vote', form.getvalue('voterId'), str(convert_date_to_id(ids[0])), unqiue_candidate_id,unique_office_id, crt])
-        print('<b>Sucessfully cast ballot.</b>')
+            [PATH_TO_MACHINE, 'vote', form.getvalue('voterId'), str(convert_date_to_id(ids[0])), unique_office_id, unqiue_candidate_id, crt])
+        #Make a cookie to allow people to change their most recent vote
+        print('<b>Sucessfully cast ballot.</b><script>document.cookie = \"id=' + form.getvalue('voterId') + '\";</script>')
         print('<ul>')
         print('<li>Election Date: {}</li>'.format(ids[0]))
         print(
@@ -42,7 +50,6 @@ try:
         print('<li>Candidate: {}</li>'.format(
             elections[ids[0]]['offices'][int(ids[1])]['candidates'][int(ids[2])]['name']))
         print('</ul>')
-
     else:
         print('<form method="post">')
         print('<label for="voterId">Voter ID</label><br>')

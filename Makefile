@@ -1,6 +1,5 @@
 CC=gcc
-#CFLAGS=-g -Wall -Werror -pedantic -std=gnu99 -I./lib
-CFLAGS=-g -Wall -pedantic -std=gnu99 -I./lib
+CFLAGS=-g -Wall -Werror -pedantic -std=gnu99 -I./lib
 TARGET=etovucca
 SRCDIR=src
 LIBDIR=lib

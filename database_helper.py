@@ -45,7 +45,8 @@ for row in c.execute(SQL_OFFICES):
         elections[dates[row[2]]]['offices'][-1]['candidates'].append({
             "name": subrow[1],
             "id": subrow[0],
-            "votes": subrow[2]
+            "votes": subrow[3],
+            "info": subrow[2]
         })
 
 print(json.dumps(elections), end="")
