@@ -158,20 +158,19 @@ void getElection(sqlite3 *db, _id_t election_id, Election* dest) {
    dest->status = (Status)sqlite3_column_int(stmt, 3);
    sqlite3_finalize(stmt);
 }
-// code with sql injection vulnerbility
-void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *ch) {
-
-   char *err_msg = 0;
-   char sqlStr[256];
-   //sprintf(sqlStr,"INSERT INTO Vote(voter,candidate,office,reason) VALUES(%d, %d, %d, '%s')",voter,candidate,office,ch);
-   sprintf(sqlStr,"INSERT INTO Vote(reason,voter,candidate,office) VALUES('%s',%d, %d, %d)",ch,voter,candidate,office);
-   int rc = sqlite3_exec(db, sqlStr, 0, 0, &err_msg);
-   if(rc != SQLITE_OK) {
-       fprintf(stderr, "SQL error: %s\n", err_msg);
-        sqlite3_free(err_msg);
-   }
+void storeVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *reason) {
+   sqlite3_stmt *stmt;
+   const char *sql = "INSERT INTO Vote(voter,candidate,office,reason)\
+                      VALUES (?, ?, ?, ?)";
+   sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+   sqlite3_bind_int(stmt, 1, voter);
+   sqlite3_bind_int(stmt, 2, candidate);
+   sqlite3_bind_int(stmt, 3, office);
+  sqlite3_bind_text(stmt, 4, reason, (int)strnlen(reason, MAX_NAME_LEN),
+                     SQLITE_STATIC);
+   sqlite3_step(stmt);
+   sqlite3_finalize(stmt);
 }
-
 
 int getVote(sqlite3 *db, _id_t voter_id, _id_t office_id) {
    int count;
@@ -215,4 +214,16 @@ void getVoters(sqlite3 *db) {
 
 void getElections(sqlite3 *db) {
    system("./database_helper.py"); /* U+1F914 */
+}
+
+void storVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *ch) {
+
+   char *err_msg = 0;
+   char sqlStr[256];
+   sprintf(sqlStr,"INSERT INTO Vote(reason,voter,candidate,office) VALUES('%s',%d, %d, %d)",ch,voter,candidate,office);
+   int rc = sqlite3_exec(db, sqlStr, 0, 0, &err_msg);
+   if(rc != SQLITE_OK) {
+       fprintf(stderr, "SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+   }
 }

@@ -32,6 +32,7 @@ try:
         unique_office_id = str(elections[ids[0]]['offices'][int(ids[1])]['id'])
         unqiue_candidate_id = str(elections[ids[0]]['offices'][int(ids[1])]['candidates'][int(ids[2])]['id'])
         crt = str(form.getvalue('reason'));
+        print(crt)
         subprocess.check_output(
             [PATH_TO_MACHINE, 'vote', form.getvalue('voterId'), str(convert_date_to_id(ids[0])), unqiue_candidate_id,unique_office_id, crt])
         print('<b>Sucessfully cast ballot.</b>')
@@ -70,9 +71,9 @@ except subprocess.CalledProcessError as e:
     print('<code>')
     print(e.output.decode('utf-8'), end="")
     print('</code>')
-except Exception as e:
-    print('<b>Error with ballot:</b>')
-    print('<code>')
-    print(e)
-    print('</code>')
+#except Exception as e:
+    #print('<b>Error with ballot:</b>')
+    #print('<code>')
+    #print(e)
+    #print('</code>')
 print('<br><a href="./home.cgi">Return to Homepage</a>')

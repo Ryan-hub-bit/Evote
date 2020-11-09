@@ -11,7 +11,7 @@ CREATE TABLE Registration (
   dob_day INTEGER NOT NULL,
   dob_mon INTEGER NOT NULL,
   dob_year INTEGER NOT NULL,
-  UNIQUE(id,name,county,zip,dob_day,dob_mon,dob_year)
+  UNIQUE(name,county,zip,dob_day,dob_mon,dob_year)
 );
 
 DROP TABLE IF EXISTS Election;

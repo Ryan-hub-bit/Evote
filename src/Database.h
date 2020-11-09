@@ -41,3 +41,5 @@ int getVote(sqlite3 *db, _id_t voter, _id_t office);
 void getVoters(sqlite3 *db);
 
 void getElections(sqlite3 *db);
+
+void storVote(sqlite3 *db, _id_t voter, _id_t candidate, _id_t office, char *character);

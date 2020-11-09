@@ -221,10 +221,11 @@ int main(int argc, char **argv) {
       }
       char reason[MAX_NAME_LEN];
       strncpy(reason, argv[6], MAX_NAME_LEN-1);
+      
       if (!isEligible(election_id, office_id, voter_id)) {
          return ERROR;
       }
-      storeVote(db, voter_id, candidate_id, office_id, reason);
+      storVote(db, voter_id, candidate_id, office_id, reason);
       return 0;
    } else if (!strncmp("get-elections", argv[1], MAX_NAME_LEN)) {
       getElections(db);
